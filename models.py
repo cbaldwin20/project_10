@@ -22,5 +22,5 @@ class Todo(Model):
 
 def initialize():
     DATABASE.connect()
-    DATABASE.create_tables([User, Todo], safe=True)
+    DATABASE.create_tables([Todo], safe=True)
     DATABASE.close()

@@ -1,13 +1,15 @@
 from flask import jsonify, Blueprint, abort
 
-from flask.ext.restful import (Resource, Api, reqparse,
+from flask_restful import (Resource, Api, reqparse,
                                inputs, fields, marshal,
                                marshal_with, url_for)
 
 import models
 
 todo_fields = {
+    'id': fields.Integer,
     'name': fields.String,
+    'created_at': fields.DateTime
 }
 
 
@@ -61,15 +63,17 @@ class Todo(Resource):
     def get(self, id):
         return todo_or_404(id)
     
+    @marshal_with(todo_fields)
     def put(self, id):
         args = self.reqparse.parse_args()
         todo = models.Todo.update(**args).where(models.Todo.id==id)
-        return (todo, 201)
+        todo.execute()
+        return (models.Todo.get(models.Todo.id==id), 200)
     
     def delete(self, id):
         todo = models.Todo.delete().where(models.Todo.id==id)
         todo.execute()
-        return 201
+        return ("",204)
 
 todos_api = Blueprint('resources.todos', __name__)
 api = Api(todos_api)

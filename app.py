@@ -1,5 +1,4 @@
 from flask import Flask, g, jsonify, render_template
-
 import config
 from resources.todos import todos_api
 from resources.users import users_api
@@ -9,7 +8,7 @@ app = Flask(__name__)
 app.register_blueprint(todos_api)
 app.register_blueprint(users_api)
 
-
+# will render the home page
 @app.route('/')
 def my_todos():
     return render_template('index.html')

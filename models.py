@@ -1,16 +1,14 @@
 import datetime
-
-#from argon2 import PasswordHasher
 from itsdangerous import (TimedJSONWebSignatureSerializer as Serializer,
                           BadSignature, SignatureExpired)
 from argon2 import PasswordHasher
 from peewee import *
 
-
 DATABASE = SqliteDatabase('todos.sqlite')
 HASHER = PasswordHasher()
 
 class User(Model):
+    """for creating a User for authentication"""
     username = CharField(unique=True)
     email = CharField(unique=True)
     password = CharField()
@@ -40,15 +38,14 @@ class User(Model):
     def verify_password(self, password):
         return HASHER.verify(self.password, password)
 
+
 class Todo(Model):
+    """for creating a todo to add to our list"""
     name = CharField()
     created_at = DateTimeField(default=datetime.datetime.now)
     
     class Meta:
         database = DATABASE
-
-
-
 
 def initialize():
     DATABASE.connect()

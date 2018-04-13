@@ -1,19 +1,16 @@
 import json
-
 from flask import jsonify, Blueprint, abort, make_response
-
 from flask_restful import (Resource, Api, reqparse,
                                inputs, fields, marshal,
                                marshal_with, url_for)
-
 import models
 
 user_fields = {
     'username': fields.String,
 }
 
-
 class UserList(Resource):
+    """will create a user instance"""
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
         self.reqparse.add_argument(
@@ -43,6 +40,7 @@ class UserList(Resource):
         super().__init__()
         
     def post(self):
+        """will create a User instance"""
         args = self.reqparse.parse_args()
         if args['password'] == args['verify_password']:
             user = models.User.create_user(**args)
@@ -52,8 +50,6 @@ class UserList(Resource):
                 'error': 'Password and password verification do not match'
             }), 400)
     
-
-
 users_api = Blueprint('resources.users', __name__)
 api = Api(users_api)
 api.add_resource(

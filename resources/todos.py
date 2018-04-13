@@ -40,8 +40,8 @@ class TodoList(Resource):
         todos = [marshal(todo, todo_fields) for todo in models.Todo.select()]
         return todos
     
-    @marshal_with(todo_fields)
     @auth.login_required
+    @marshal_with(todo_fields)
     def post(self):
         args = self.reqparse.parse_args()
         todo = models.Todo.create(**args)
@@ -91,5 +91,3 @@ api.add_resource(
     endpoint='todo'
 )
 
-if __name__ == '__main__':
-    unittest.main()

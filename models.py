@@ -6,7 +6,6 @@ from itsdangerous import (TimedJSONWebSignatureSerializer as Serializer,
 from argon2 import PasswordHasher
 from peewee import *
 
-import config
 
 DATABASE = SqliteDatabase('todos.sqlite')
 HASHER = PasswordHasher()

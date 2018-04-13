@@ -90,3 +90,6 @@ api.add_resource(
     '/api/v1/todos/<int:id>',
     endpoint='todo'
 )
+
+if __name__ == '__main__':
+    unittest.main()

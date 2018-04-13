@@ -1,6 +1,6 @@
 from flask import g
 
-from flask.ext.httpauth import HTTPBasicAuth
+from flask_httpauth import HTTPBasicAuth
 
 import models
 

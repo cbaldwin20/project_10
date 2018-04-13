@@ -2,7 +2,7 @@ import json
 
 from flask import jsonify, Blueprint, abort, make_response
 
-from flask.ext.restful import (Resource, Api, reqparse,
+from flask_restful import (Resource, Api, reqparse,
                                inputs, fields, marshal,
                                marshal_with, url_for)
 

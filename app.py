@@ -1,12 +1,16 @@
-from flask import Flask, g, jsonify, render_template
 import config
+
+from flask import Flask, render_template
+
+import models
+
 from resources.todos import todos_api
 from resources.users import users_api
-import models
 
 app = Flask(__name__)
 app.register_blueprint(todos_api)
 app.register_blueprint(users_api)
+
 
 # will render the home page
 @app.route('/')

@@ -1,13 +1,16 @@
 import json
-from flask import jsonify, Blueprint, abort, make_response
-from flask_restful import (Resource, Api, reqparse,
-                               inputs, fields, marshal,
-                               marshal_with, url_for)
+
+from flask import Blueprint, make_response
+
+from flask_restful import (
+    Api, Resource, fields, marshal, reqparse,
+)
 import models
 
 user_fields = {
     'username': fields.String,
 }
+
 
 class UserList(Resource):
     """will create a user instance"""
@@ -38,7 +41,7 @@ class UserList(Resource):
             location=['form', 'json']
         )
         super().__init__()
-        
+
     def post(self):
         """will create a User instance"""
         args = self.reqparse.parse_args()
@@ -49,7 +52,7 @@ class UserList(Resource):
             json.dumps({
                 'error': 'Password and password verification do not match'
             }), 400)
-    
+
 users_api = Blueprint('resources.users', __name__)
 api = Api(users_api)
 api.add_resource(

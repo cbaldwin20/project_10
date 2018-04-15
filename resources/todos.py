@@ -1,8 +1,11 @@
-from flask import jsonify, Blueprint, abort
-from flask_restful import (Resource, Api, reqparse,
-                               inputs, fields, marshal,
-                               marshal_with, url_for)
 from auth import auth
+
+from flask import Blueprint, abort
+
+from flask_restful import (
+    Api, Resource, fields, marshal, marshal_with, reqparse
+)
+
 import models
 
 todo_fields = {
@@ -11,14 +14,16 @@ todo_fields = {
     'created_at': fields.DateTime
 }
 
+
 def todo_or_404(todo_id):
     """if instance doesn't exist then throws a 404"""
     try:
-        todo = models.Todo.get(models.Todo.id==todo_id)
+        todo = models.Todo.get(models.Todo.id == todo_id)
     except models.Todo.DoesNotExist:
         abort(404)
     else:
-        return todo 
+        return todo
+
 
 class TodoList(Resource):
     """Will get all the instances, or add an instance"""
@@ -31,12 +36,12 @@ class TodoList(Resource):
             location=['form', 'json']
         )
         super().__init__()
-        
+
     def get(self):
         """will get all of the instances in the database"""
         todos = [marshal(todo, todo_fields) for todo in models.Todo.select()]
         return todos
-    
+
     @auth.login_required
     @marshal_with(todo_fields)
     def post(self):
@@ -44,6 +49,7 @@ class TodoList(Resource):
         args = self.reqparse.parse_args()
         todo = models.Todo.create(**args)
         return (todo, 201)
+
 
 class Todo(Resource):
     """will get, change, or delete a single instance"""
@@ -55,29 +61,29 @@ class Todo(Resource):
             help='No todo name provided',
             location=['form', 'json']
         )
-        
+
         super().__init__()
 
     @marshal_with(todo_fields)
     def get(self, id):
         """get a single instance"""
         return todo_or_404(id)
-    
+
     @auth.login_required
     @marshal_with(todo_fields)
     def put(self, id):
         """will change a single instance"""
         args = self.reqparse.parse_args()
-        todo = models.Todo.update(**args).where(models.Todo.id==id)
+        todo = models.Todo.update(**args).where(models.Todo.id == id)
         todo.execute()
-        return (models.Todo.get(models.Todo.id==id), 200)
-    
+        return (models.Todo.get(models.Todo.id == id), 200)
+
     @auth.login_required
     def delete(self, id):
         """will delete a single instance"""
-        todo = models.Todo.delete().where(models.Todo.id==id)
+        todo = models.Todo.delete().where(models.Todo.id == id)
         todo.execute()
-        return ("",204)
+        return ("", 204)
 
 todos_api = Blueprint('resources.todos', __name__)
 api = Api(todos_api)
@@ -91,4 +97,3 @@ api.add_resource(
     '/api/v1/todos/<int:id>',
     endpoint='todo'
 )
-
